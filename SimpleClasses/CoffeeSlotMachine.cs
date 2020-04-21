@@ -138,7 +138,7 @@ namespace SimpleClasses
         /// <returns>Existiert das Produkt</returns>
         public bool SelectProduct(string productName, out int[] returnCoins, out int donation)
         {
-            throw new NotImplementedException();
+            //TODO
         }
 
         /// <summary>
@@ -149,7 +149,13 @@ namespace SimpleClasses
         /// <returns>Array mit der Anzahl der Münzen je Wert</returns>
         public int[] CancelOrder()
         {
-            throw new NotImplementedException();
+            int[] coinsToReturn = new int[_currentCoins.Length];
+            for (int i = 0; i < coinsToReturn.Length; i++)
+            {
+                coinsToReturn[i] = _currentCoins[i];
+            }
+            _currentCoins = new int[coinsToReturn.Length];
+            return coinsToReturn;
         }
 
         /// <summary>
@@ -158,7 +164,10 @@ namespace SimpleClasses
         /// <returns></returns>
         public int EmptyDepot()
         {
-            throw new NotImplementedException();
+            int sum = CoinsInDepot;
+            int index = _coinDepot.Length;
+            _coinDepot = new int[index];
+            return sum;
         }
 
         /// <summary>
@@ -170,7 +179,21 @@ namespace SimpleClasses
         /// <returns>true, wenn das Produkt existiert</returns>
         public bool GetCounterForProduct(string productName, out int counter)
         {
-            throw new NotImplementedException();
+            bool isValidProductName = false;
+            int count = 0;
+            counter = 0;
+
+            do
+            {
+                if (productName.Equals(_productNames[count]))
+                {
+                    isValidProductName = true;
+                    counter = count;
+                }
+                count++;
+            } while (count < _productNames.Length || isValidProductName);
+
+            return isValidProductName;
         }
 
         /// <summary>
@@ -182,7 +205,21 @@ namespace SimpleClasses
         /// <returns>true, wenn die Münze existiert</returns>
         public bool GetCounterForCoin(int coinValue, out int counter)
         {
-            throw new NotImplementedException();
+            bool isValidCoinValue = false;
+            int count = 0;
+            counter = 0;
+
+            do
+            {
+                if (coinValue == _coinValues[count])
+                {
+                    isValidCoinValue = true;
+                    counter = count;
+                }
+                count++;
+            } while (count < _coinValues.Length || isValidCoinValue);
+
+            return isValidCoinValue;
         }
     }
 }
