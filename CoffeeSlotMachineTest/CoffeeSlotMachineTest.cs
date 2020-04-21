@@ -4,8 +4,6 @@ using System;
 
 namespace CoffeeSlotMachineTest
 {
-    
-    
     /// <summary>
     ///This is a test class for CoffeeSlotMachineTest and is intended
     ///to contain all CoffeeSlotMachineTest Unit Tests
@@ -13,7 +11,6 @@ namespace CoffeeSlotMachineTest
     [TestClass()]
     public class CoffeeSlotMachineTest
     {
-
         /// <summary>
         /// Vergleich zweier Arrays gleichen Typs mit vergleichbaren Elementen
         /// </summary>
@@ -49,7 +46,7 @@ namespace CoffeeSlotMachineTest
         public void T02_OwnConstructor()
         {
             int[] coins = { 1, 2, 3, 4, 5, 6 };
-            string[] productNames = {"Kaffee", "Tee", "Suppe", "Milch"};
+            string[] productNames = { "Kaffee", "Tee", "Suppe", "Milch" };
             CoffeeSlotMachine coffeeSlotMachine = new CoffeeSlotMachine(coins, productNames);
             Assert.AreEqual(21, coffeeSlotMachine.CoinsInDepot, "1-6 Münzen sollen im Depot sein");
             Assert.AreEqual(4, coffeeSlotMachine.ProductsAvailable, "Vier Produkte anlegen");
@@ -70,7 +67,7 @@ namespace CoffeeSlotMachineTest
         {
             int[] returnCoins;
             int donation;
-            int[] returnCoinsExpected = {0,0,0,1,0,0};  // 1* 50 cent
+            int[] returnCoinsExpected = { 0, 0, 0, 1, 0, 0 };  // 1* 50 cent
             int[] coins = { 1, 2, 3, 4, 5, 6 };
             string[] productNames = { "Kaffee", "Tee", "Suppe", "Milch" };
             CoffeeSlotMachine coffeeSlotMachine = new CoffeeSlotMachine(coins, productNames);
@@ -88,7 +85,7 @@ namespace CoffeeSlotMachineTest
         {
             int[] returnCoins;
             int donation;
-            int[] coins = { 0,0,0,3,3,3};
+            int[] coins = { 0, 0, 0, 3, 3, 3 };
             string[] productNames = { "Kaffee", "Tee", "Suppe", "Milch" };
             CoffeeSlotMachine coffeeSlotMachine = new CoffeeSlotMachine(coins, productNames);
             coffeeSlotMachine.InsertCoin(200);
@@ -173,7 +170,7 @@ namespace CoffeeSlotMachineTest
         [TestMethod()]
         public void T09_IllegalCoins()
         {
-            int[] coins = { 1,2,3,4,5,6};
+            int[] coins = { 1, 2, 3, 4, 5, 6 };
             string[] productNames = { "Kaffee", "Tee", "Suppe", "Milch" };
             CoffeeSlotMachine coffeeSlotMachine = new CoffeeSlotMachine(coins, productNames);
             bool ok = coffeeSlotMachine.InsertCoin(7);
@@ -189,7 +186,6 @@ namespace CoffeeSlotMachineTest
             ok = coffeeSlotMachine.InsertCoin(10);
             Assert.IsFalse(ok, "Es wurden bereits 50 Cent eingeworfen");
         }
-
 
         [TestMethod()]
         public void T10_MoreCoins()
@@ -227,9 +223,8 @@ namespace CoffeeSlotMachineTest
             Assert.IsTrue(ok, "10 ist eine gültige Münze");
             Assert.AreEqual(21, coffeeSlotMachine.CoinsInDepot, "Münzen wurden noch nicht übernommen");
             returnCoins = coffeeSlotMachine.CancelOrder();
-            Assert.IsTrue(CompareArrays(returnCoins,returnCoinsExpected), "Stornierte Münzen stimmen nicht");
+            Assert.IsTrue(CompareArrays(returnCoins, returnCoinsExpected), "Stornierte Münzen stimmen nicht");
             Assert.AreEqual(21, coffeeSlotMachine.CoinsInDepot, "Alter Zustand bleibt erhalten");
-
         }
 
         [TestMethod()]
@@ -297,6 +292,5 @@ namespace CoffeeSlotMachineTest
             coffeeSlotMachine.GetCounterForCoin(200, out counter);
             Assert.AreEqual(4, counter, "Am Papier durchspielen, möglichst große Münzen zurückgeben");
         }
-
     }
 }

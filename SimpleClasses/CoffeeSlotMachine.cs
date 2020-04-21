@@ -4,15 +4,19 @@ namespace SimpleClasses
 {
     public class CoffeeSlotMachine
     {
-        const int Price = 50;  // Einheitspreis für alle Produkte
+        private const int Price = 50;  // Einheitspreis für alle Produkte
+        private int[] _coinValues = new int[] { 5, 10, 20, 50, 100, 200 };
+        private int[] _coinDepot;
+        private int[] _currentCoins;
+        private string[] _productNames;
+        private int[] _productCounter;
 
         /// <summary>
         /// Parameterloser Constructor initialisiert das Depot mit jeweils drei Münzen
         /// und die Produkte mit den drei Standardprodukten Cappuccino, Mocca, Kakao
         /// </summary>
-        public CoffeeSlotMachine()
+        public CoffeeSlotMachine() : this(new int[] { 3, 3, 3, 3, 3, 3 }, new string[] { "Cappuccino", "Mocca", "Kakao" })
         {
-            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -20,9 +24,12 @@ namespace SimpleClasses
         /// </summary>
         /// <param name="coinDepot"></param>
         /// <param name="productNames"></param>
-        public CoffeeSlotMachine(int[] coinDepot, string[] productNames) 
+        public CoffeeSlotMachine(int[] coinDepot, string[] productNames)
         {
-            throw new NotImplementedException();
+            _coinDepot = coinDepot;
+            _productNames = productNames;
+            _currentCoins = new int[_coinDepot.Length];
+            _productCounter = new int[_productNames.Length];
         }
 
         /// <summary>
@@ -30,20 +37,30 @@ namespace SimpleClasses
         /// </summary>
         public int CurrentMoney
         {
-            get 
+            get
             {
-                throw new NotImplementedException();
+                int sum = 0;
+                for (int i = 0; i < _coinValues.Length; i++)
+                {
+                    sum += _coinValues[i] * _currentCoins[i];
+                }
+                return sum;
             }
         }
 
         /// <summary>
         /// Wie viele Münzen befinden sich im Münzdepot
         /// </summary>
-        public int CoinsInDepot 
+        public int CoinsInDepot
         {
             get
             {
-                throw new NotImplementedException();
+                int sum = 0;
+                for (int i = 0; i < _coinDepot.Length; i++)
+                {
+                    sum += _coinDepot[i];
+                }
+                return sum;
             }
         }
 
@@ -54,10 +71,9 @@ namespace SimpleClasses
         {
             get
             {
-                throw new NotImplementedException();
+                return _productNames.Length;
             }
         }
-
 
         /// <summary>
         /// Eine Münze wird eingeworfen. Der Wert wird in Cent angegeben
@@ -69,7 +85,47 @@ namespace SimpleClasses
         /// <returns>Wurde die Münze übernommen</returns>
         public bool InsertCoin(int coinValue)
         {
-            throw new NotImplementedException();
+            bool isValid = true;
+
+            if (CurrentMoney < Price)
+            {
+                switch (coinValue)
+                {
+                    case 5:
+                        _currentCoins[0]++;
+                        break;
+
+                    case 10:
+                        _currentCoins[1]++;
+                        break;
+
+                    case 20:
+                        _currentCoins[2]++;
+                        break;
+
+                    case 50:
+                        _currentCoins[3]++;
+                        break;
+
+                    case 100:
+                        _currentCoins[4]++;
+                        break;
+
+                    case 200:
+                        _currentCoins[5]++;
+                        break;
+
+                    default:
+                        isValid = false;
+                        break;
+                }
+            }
+            else
+            {
+                isValid = false;
+            }
+
+            return isValid;
         }
 
         /// <summary>
@@ -86,7 +142,7 @@ namespace SimpleClasses
         }
 
         /// <summary>
-        /// Die aktuelle Bestellung wird abgebrochen. 
+        /// Die aktuelle Bestellung wird abgebrochen.
         /// Die Anzahl der eingeworfenen Münzen wird je Wert 5c-200c in einem
         /// Array zurückgegeben (5 cent == Index:0, 200 cent == Index 5
         /// </summary>
@@ -106,7 +162,7 @@ namespace SimpleClasses
         }
 
         /// <summary>
-        /// Liest den aktuellen Produktzählerstand für 
+        /// Liest den aktuellen Produktzählerstand für
         /// das Produkt aus.
         /// </summary>
         /// <param name="productName"></param>
@@ -118,7 +174,7 @@ namespace SimpleClasses
         }
 
         /// <summary>
-        /// Liest den aktuellen Produktzählerstand für 
+        /// Liest den aktuellen Produktzählerstand für
         /// das Produkt aus.
         /// </summary>
         /// <param name="coinValue"></param>
