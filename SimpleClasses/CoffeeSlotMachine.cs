@@ -5,7 +5,7 @@ namespace SimpleClasses
     public class CoffeeSlotMachine
     {
         private const int Price = 50;  // Einheitspreis für alle Produkte
-        private int[] _coinValues = new int[] { 5, 10, 20, 50, 100, 200 };
+        readonly private int[] _coinValues = new int[] { 5, 10, 20, 50, 100, 200 };
         private int[] _coinDepot;
         private int[] _currentCoins;
         private string[] _productNames;
@@ -138,7 +138,150 @@ namespace SimpleClasses
         /// <returns>Existiert das Produkt</returns>
         public bool SelectProduct(string productName, out int[] returnCoins, out int donation)
         {
-            //TODO
+            bool orderIsValid;
+            bool nameNotFound = true;
+            int productArrayCounter = 0;
+            returnCoins = new int[] { 0, 0, 0, 0, 0, 0 };
+            donation = 0;
+
+            if (CurrentMoney < Price)
+            {
+                orderIsValid = false;
+            }
+            else
+            {
+                while (productArrayCounter < _productNames.Length && nameNotFound)
+                {
+                    if (productName.Equals(_productNames[productArrayCounter]))
+                    {
+                        nameNotFound = false;
+                    }
+                    if (nameNotFound)
+                    {
+                        productArrayCounter++;
+                    }
+                }
+
+                if (nameNotFound)
+                {
+                    orderIsValid = false;
+                }
+                else
+                {
+                    orderIsValid = true;
+                    _productCounter[productArrayCounter]++;
+                    int moneySum = CurrentMoney;
+                    int checkSum = 0;
+
+                    for (int i = 0; i < _coinDepot.Length; i++)
+                    {
+                        _coinDepot[i] += _currentCoins[i];
+                        _currentCoins[i] = 0;
+                    }
+
+                    if (moneySum > Price)
+                    {
+                        //200 - 50 = 150 --> 100+50
+                        moneySum = moneySum - Price;
+                        checkSum = moneySum;
+                        do
+                        {
+                            if (moneySum >= 200 && checkSum >= 200)
+                            {
+                                GetCounterForCoin(200, out int count);
+                                if (count > 0)
+                                {
+                                    _coinDepot[5]--;
+                                    returnCoins[5]++;
+                                    moneySum -= 200;
+                                }
+                                else
+                                {
+                                    checkSum = 100;
+                                }
+                            }
+                            else if (moneySum >= 100 && checkSum >= 100)
+                            {
+                                GetCounterForCoin(100, out int count);
+                                if (count > 0)
+                                {
+                                    _coinDepot[4]--;
+                                    returnCoins[4]++;
+                                    moneySum -= 100;
+                                }
+                                else
+                                {
+                                    checkSum = 50;
+                                }
+                            }
+                            else if (moneySum >= 50 && checkSum >= 50)
+                            {
+                                GetCounterForCoin(50, out int count);
+                                if (count > 0)
+                                {
+                                    _coinDepot[3]--;
+                                    returnCoins[3]++;
+                                    moneySum -= 50;
+                                }
+                                else
+                                {
+                                    checkSum = 20;
+                                }
+                            }
+                            else if (moneySum >= 20 && checkSum >= 20)
+                            {
+                                GetCounterForCoin(20, out int count);
+                                if (count > 0)
+                                {
+                                    _coinDepot[2]--;
+                                    returnCoins[2]++;
+                                    moneySum -= 20;
+                                }
+                                else
+                                {
+                                    checkSum = 10;
+                                }
+                            }
+                            else if (moneySum >= 10 && checkSum >= 10)
+                            {
+                                GetCounterForCoin(10, out int count);
+                                if (count > 0)
+                                {
+                                    _coinDepot[1]--;
+                                    returnCoins[1]++;
+                                    moneySum -= 10;
+                                }
+                                else
+                                {
+                                    checkSum = 5;
+                                }
+                            }
+                            else
+                            {
+                                GetCounterForCoin(5, out int count);
+                                if (count > 0)
+                                {
+                                    _coinDepot[0]--;
+                                    returnCoins[0]++;
+                                    moneySum -= 5;
+                                }
+                                else
+                                {
+                                    donation += moneySum;
+                                    moneySum = 0;
+                                }
+                            }
+                        } while (moneySum > 0);
+                    }
+                    else
+                    {
+                        //returnCoins --> 0
+                        //donation --> 0
+                    }
+                }
+            }
+
+            return orderIsValid;
         }
 
         /// <summary>
@@ -164,7 +307,11 @@ namespace SimpleClasses
         /// <returns></returns>
         public int EmptyDepot()
         {
-            int sum = CoinsInDepot;
+            int sum = 0;
+            for (int i = 0; i < _coinDepot.Length; i++)
+            {
+                sum += _coinDepot[i] * _coinValues[i];
+            }
             int index = _coinDepot.Length;
             _coinDepot = new int[index];
             return sum;
@@ -188,10 +335,10 @@ namespace SimpleClasses
                 if (productName.Equals(_productNames[count]))
                 {
                     isValidProductName = true;
-                    counter = count;
+                    counter = _productCounter[count];
                 }
                 count++;
-            } while (count < _productNames.Length || isValidProductName);
+            } while (count < _productNames.Length && !isValidProductName);
 
             return isValidProductName;
         }
@@ -214,10 +361,10 @@ namespace SimpleClasses
                 if (coinValue == _coinValues[count])
                 {
                     isValidCoinValue = true;
-                    counter = count;
+                    counter = _coinDepot[count];
                 }
                 count++;
-            } while (count < _coinValues.Length || isValidCoinValue);
+            } while (count < _coinValues.Length && !isValidCoinValue);
 
             return isValidCoinValue;
         }
